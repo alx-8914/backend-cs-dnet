@@ -76,21 +76,25 @@ public class AuthController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    [Authorize]
-    [HttpGet("profile")]
-    public async Task<IActionResult> GetProfile()
-    {
-        var userId = int.Parse(User.FindFirst("userId")!.Value);
-        var user = await _context.Users
-            .Where(u => u.Id == userId)
-            .Select(u => new { u.Id, u.Email })
-            .FirstOrDefaultAsync();
-        
-        if (user == null)
-            return NotFound("Usuário não encontrado.");
-        
-        return Ok(user);
-    }
+   [Authorize]
+[HttpGet("profile")]
+public async Task<IActionResult> GetProfile()
+{
+    // Verifica se a claim existe de forma segura
+    var userIdClaim = User.FindFirst("userId");
+    if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+        return Unauthorized("Token inválido: claim 'userId' não encontrada.");
+
+    var user = await _context.Users
+        .Where(u => u.Id == userId)
+        .Select(u => new { u.Id, u.Email })
+        .FirstOrDefaultAsync();
+    
+    if (user == null)
+        return NotFound("Usuário não encontrado.");
+    
+    return Ok(user);
+}
 
     [HttpGet("ping")]
     public IActionResult Ping()

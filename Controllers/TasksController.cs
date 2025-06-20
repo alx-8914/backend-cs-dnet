@@ -14,7 +14,16 @@ public class TasksController : ControllerBase
     {
         _context = context;
     }
-
+    [Authorize(Roles = "Admin")] // Restrito a administradores
+    [HttpGet("users")]
+    public async Task<IActionResult> GetUsers()
+    {
+        var users = await _context.Users
+            .Select(u => new { u.Id, u.Email })
+            .ToListAsync();
+            return Ok(users);
+    }
+       
     [HttpGet]
     public async Task<IActionResult> GetTasks()
     {
@@ -57,6 +66,17 @@ public class TasksController : ControllerBase
         task.Title = request.Title;
         task.IsCompleted = request.IsCompleted;
 
+        await _context.SaveChangesAsync();
+        return Ok(task);
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> ToggleTaskCompletion(int id)
+    {
+        var task = await _context.Tasks.FindAsync(id);
+        if (task == null) return NotFound();
+
+        task.IsCompleted = request.IsCompleted; // Atualiza o status
         await _context.SaveChangesAsync();
         return Ok(task);
     }

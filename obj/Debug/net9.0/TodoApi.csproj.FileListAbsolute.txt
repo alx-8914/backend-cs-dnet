@@ -161,3 +161,4 @@ C:\Users\alxtr\Documents\backend\obj\Debug\net9.0\refint\TodoApi.dll
 C:\Users\alxtr\Documents\backend\obj\Debug\net9.0\TodoApi.pdb
 C:\Users\alxtr\Documents\backend\obj\Debug\net9.0\TodoApi.genruntimeconfig.cache
 C:\Users\alxtr\Documents\backend\obj\Debug\net9.0\ref\TodoApi.dll
+C:\Users\alxtr\Documents\backend\obj\Debug\net9.0\TodoApi.sourcelink.json
